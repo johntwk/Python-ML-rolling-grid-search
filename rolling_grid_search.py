@@ -133,21 +133,3 @@ def rolling_grid_search_ML (model, X, y, group_size, param_grid, scoring, crit, 
     RollingGrid = collections.namedtuple('RollingGrid', ['score', 'params', 'actual', 'pred'])
     p = RollingGrid(score=score, params = best_params_lst, actual = actual_lst, pred = pred_lst)
     return p
-
-def rmse(actual,pred):
-    import numpy as np
-    len_lst = len(actual)
-    e_2 = []
-    for i in range(0,len_lst):
-        e_2.append((actual[i]-pred[i])**2)
-    return (np.array(e_2).mean())**(0.5)
-def crit_min(score_lst):
-    min_val = score_lst[0]
-    min_index = 0
-    counter = 0
-    for score in score_lst:
-        if (score < min_val):
-            min_index = counter
-            min_val = score
-        counter += 1
-    return (min_index,min_val)
