@@ -8,7 +8,7 @@ This Python function uses machine learning modelling object from scikit-learn to
 2. [Installation](#Installation)
 3. [Methodology](#Methodology)
 4. [Usage](#Usage)
-5. [Future Development](#Future Development)
+5. [Future Development](#FutureDevelopment)
 6. [Files](#Files)
 7. [Reference](#Reference)
 8. [License](#License)
@@ -189,7 +189,7 @@ plt.show()
   <img src="Figure_1-1.png" alt="">
 </div>  
 
-## Future Development<a name="Future Development"></a>
+## Future Development<a name="FutureDevelopment"></a>
 1. Support multi-step ahead forecast.
 2. Support expanding forecast.
 
