@@ -34,7 +34,7 @@ from rolling_grid_search import rolling_grid_search_ML
 3. Run one-step ahead forecast with window size equal to **window_size** using hyperparameters obtained from 2.
 
 
-4. Compute the score using scoring function.
+4. Compute the score using **scoring** function.
 
 
 ## Usage<a name="Usage"></a>
