@@ -162,22 +162,26 @@ Then, users can produce a graph of parameters and a graph of actual and predicte
 import matplotlib.pyplot as plt
 
 params_df = DataFrame.from_dict(data = params_lst)
-params_df.plot(kind='line')
+params_fig = params_df.plot(kind='line', title="Change in Hyperparameters", grid=False)
+params_fig.set_xlabel("Group Number")
+params_fig.set_ylabel("Hyperparameters")
 plt.show()
+
 pred_df = pd.DataFrame(data=[pred_lst,actual_lst])
-pred_df['name'] = ['Prediction','Actual']
-pred_df.set_index('name',inplace = True)
 pred_df = pred_df.transpose()
-pred_df.plot(kind='line')
+pred_df.rename(index=str, columns={0: "Prediction", 1: "Actual"}, inplace = True)
+pred_fig = pred_df.plot(kind='line', title="Actual and Predicted Values", grid=False)
+pred_fig.set_xlabel("Time")
+pred_fig.set_ylabel("Exchange Rates")
 plt.show()
 ```
 
 <div id="bg">
-  <img src="Figure_1.png" alt="">
+  <img src="Figure_1_.png" alt="">
 </div>  
 
 <div id="bg">
-  <img src="Figure_1-1.png" alt="">
+  <img src="Figure_2_.png" alt="">
 </div>  
 
 ## Future Development<a name="FutureDevelopment"></a>
