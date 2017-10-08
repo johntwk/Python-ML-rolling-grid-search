@@ -99,7 +99,7 @@ The function returns a named tuple with the following information
 | pred   | a list of predcited values                      |
 
 ### Example (example.py)
-Suppose that users have a data set called **all_data.csv** in the same directory as this Python file.
+Suppose that users have a data set called **all_data.csv** in the same directory as this Python file. The data set in **all_data.csv** contains 10-year exchange rates USD/EUR and USD/GBP from the Federal Reserve Economic Data. 
 
 ```Python
 from rolling_grid_search import rolling_grid_search_ML
@@ -176,6 +176,55 @@ pred_fig.set_ylabel("Exchange Rates")
 plt.show()
 ```
 
+The output of the program is as follows.
+
+```Python
+Rolling Grid Search for Machine Learning Models
+By John Tsang
+-------------------------------------------------
+Model             :
+KNeighborsRegressor(algorithm='auto', leaf_size=30, metric='minkowski',
+          metric_params=None, n_jobs=1, n_neighbors=5, p=2,
+          weights='uniform')
+Length of Data Set: 2447
+Group size        : 365
+Labels (y)        : ['US_EU']
+Features (X)      : ['L1.US_EU', 'L1.US_UK']
+Window Size       : 7
+Hyperparameter    : 30
+Selection Size
+
+[ 1 ] Start:  0  End: 365
+[ 2 ] Start:  365  End: 730
+[ 3 ] Start:  730  End: 1095
+[ 4 ] Start:  1095  End: 1460
+[ 5 ] Start:  1460  End: 1825
+[ 6 ] Start:  1825  End: 2190
+[ 7 ] Start:  2190  End: 2447
+Number of groups  : 7 
+
+Hyperparameter Tuning......
+    [ 1 ] Length: 30
+    [ 2 ] Length: 30
+    [ 3 ] Length: 30
+    [ 4 ] Length: 30
+    [ 5 ] Length: 30
+    [ 6 ] Length: 30
+    [ 7 ] Length: 30
+
+
+Rolling Forecast......
+    Predicting group [ 1 ]
+    Predicting group [ 2 ]
+    Predicting group [ 3 ]
+    Predicting group [ 4 ]
+    Predicting group [ 5 ]
+    Predicting group [ 6 ]
+    Predicting group [ 7 ]
+
+Score: 0.0112284856808
+```
+
 <div id="bg">
   <img src="Figure_1_.png" alt="">
 </div>  
@@ -187,6 +236,7 @@ plt.show()
 ## Future Development<a name="FutureDevelopment"></a>
 1. Support multi-step ahead forecast.
 2. Support expanding forecast.
+3. Connect with other applications for real-time forecasts.
 
 ## Files<a name="Files"></a>
 1. rolling_grid_search.py
