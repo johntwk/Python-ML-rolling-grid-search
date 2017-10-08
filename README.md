@@ -24,15 +24,6 @@ from rolling_grid_search import rolling_grid_search_ML
 ## Methodology<a name="Methodology"></a>
 1. Divide the time-series into a group of size **group_size**. Since the number of data points may not be divisible by **group_size**, the remaining part at the end of the time-series form another group.
 
-```Python
-def rmse(actual,pred):
-    import numpy as np
-    len_lst = len(actual)
-    e_2 = []
-    for i in range(0,len_lst):
-        e_2.append((actual[i]-pred[i])**2)
-    return (np.array(e_2).mean())**(0.5)
-```
    
 2. Within each group, select the first **size_hyper_sel** observations for tuning hyperparameters. 
    In case the number of remaining observations from the last group is smaller than or equal to _size_hyper_sel_, 
