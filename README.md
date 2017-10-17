@@ -152,9 +152,9 @@ r = rolling_grid_search_ML(model = knnreg, y = DataFrame(data["US_EU"]), X = dat
                        group_size = 365, param_grid=param_grid, scoring = rmse, 
                        crit = crit_min, window_size = 7, size_hyper_sel = 30)
 
-params_lst = r.params
-actual_lst = r.actual
-pred_lst = r.pred
+params_lst = r['params']
+actual_lst = r['actual']
+pred_lst = r['pred']
 ```
 
 Then, users can produce a graph of parameters and a graph of actual and predicted values.
