@@ -106,7 +106,7 @@ def rolling_grid_search_ML (model, X, y, group_size, param_grid, scoring, crit,
         print "Number of groups  :",num_of_groups,"\n"
         Groups = collections.namedtuple('Groups', ["X","y",'n_groups'])
         g = Groups(X=group_X_lst, y = group_y_lst, n_groups = num_of_groups)
-        return g
+        return g    
     
     def grid_rolling_hyperparam_sel(model,X,y,param_grid,
                                     window_size,scoring,crit):
@@ -160,13 +160,11 @@ def rolling_grid_search_ML (model, X, y, group_size, param_grid, scoring, crit,
                 group_X = group_X[0:len_hyp_sel].copy()
                 group_y = group_y[0:len_hyp_sel].copy()
                 print "    [",counter,"] Length:",len(group_X)
-                #print "Range: ",0,"to",len_hyp_sel
                 # Hyperparameter tuning implementation
                 rt = grid_rolling_hyperparam_sel(model = model, X = group_X, 
                                                  y = group_y, param_grid = param_grid, 
                                                  window_size = window_size, scoring = scoring, 
                                                  crit = crit)
-                #print "[",counter,"] Length:",len(group_X),rt
                 best_params_lst.append(rt["best_params"])
             else :
                 if (len(group_X) > len_hyp_sel):
@@ -183,7 +181,7 @@ def rolling_grid_search_ML (model, X, y, group_size, param_grid, scoring, crit,
                     best_params_lst.append(best_params_lst[-1])
         return best_params_lst
     
-    def rolling_forecast(model, best_params_lst, group_X_lst, group_y_lst, window_size):
+    def rolling_forecast(model, best_params_lst, group_X_lst, group_y_lst, window_size, size_hyper_sel, number_of_groups):
         print "\n"
         print "Rolling Forecast......"
         #print "    window size =",window_size
@@ -197,33 +195,45 @@ def rolling_grid_search_ML (model, X, y, group_size, param_grid, scoring, crit,
             model = model.set_params(**best_params)
             # Convert X and y to data structure that can be inputs 
             # for scikit learn models
-            group_X = group_X.values
-            group_y = group_y.values
+            if (counter != number_of_groups):
+                group_X = group_X[size_hyper_sel:].values
+                group_y = group_y[size_hyper_sel:].values
+            else:
+                if (len(group_X) > size_hyper_sel):
+                    group_X = group_X[size_hyper_sel:].values
+                    group_y = group_y[size_hyper_sel:].values
+                else:
+                    group_X = group_X
+                    group_y = group_y
+            print "    Index: ",size_hyper_sel," Length:",len(group_X)
             # Generate cv for one-step-ahead forecast
             len_X = len(group_X)
             tscv_rolling = TimeSeriesSplit(n_splits=len_X-window_size, max_train_size = window_size)
             for train_index, test_index in tscv_rolling.split(group_X):
-                #print "A"
                 # Divide samples for training and testing
                 X_train, X_test = group_X[train_index], group_X[test_index]
                 y_train, y_test = group_y[train_index], group_y[test_index]
                 # Fit the model with training data
                 model.fit(X_train,y_train)
                 # Store the actual value
-                actual_lst.append(y_test[0][0])
+                actual_lst.append(y_test.item(0))
                 # Store predicted values
                 y_pred = model.predict(X_test)
-                pred_lst.append(y_pred[0][0])
+                pred_lst.append(y_pred.item(0))
         # Compute scores for this forecast
         score = scoring(actual_lst, pred_lst)
-        print "\nScore:",score
-        # Pack results into a named tuple as return of the function
+        print "\nScore:",score,"\n"
+        # Pack results into a dictionary as return of the function
         # score:  the score of this forecast
         # params: list of hyperparameters used in this forecast
         # actual: list of actual exchange rates
         # pred  : list of predcited values
-        RollingGrid = collections.namedtuple('RollingGrid', ['score', 'params', 'actual', 'pred'])
-        p = RollingGrid(score=score, params = best_params_lst, actual = actual_lst, pred = pred_lst)
+        ###################################################
+        p = dict()
+        p['score']  = score
+        p['params'] = best_params_lst
+        p['actual'] = actual_lst
+        p['pred']   = pred_lst
         return p
     # Main Program
     er = error_check(model, X, y, group_size, param_grid, scoring, crit, 
@@ -244,5 +254,7 @@ def rolling_grid_search_ML (model, X, y, group_size, param_grid, scoring, crit,
     # Rolling forecast
     rt = rolling_forecast(model = model, best_params_lst = best_params_lst, 
                           group_X_lst = group_X_lst, group_y_lst = group_y_lst, 
-                          window_size = window_size)
+                          window_size = window_size, size_hyper_sel = size_hyper_sel,
+                          number_of_groups = num_of_groups)
+    #rt = rt.score
     return rt
